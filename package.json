@@ -1,0 +1,38 @@
+{
+  "name": "webdav-directory-sync",
+  "version": "0.0.0",
+  "description": "Docker application for sync'ing directories via WebDAV",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "cleam": "rimraf dist",
+    "test": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perry-mitchell/webdav-directory-sync.git"
+  },
+  "keywords": [
+    "docker",
+    "webdav",
+    "sync",
+    "directory"
+  ],
+  "author": "Perry Mitchell <perry@perrymitchell.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/perry-mitchell/webdav-directory-sync/issues"
+  },
+  "homepage": "https://github.com/perry-mitchell/webdav-directory-sync#readme",
+  "private": true,
+  "devDependencies": {
+    "@types/ms": "^0.7.31",
+    "@types/node": "^18.11.9",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "ms": "^2.1.3",
+    "webdav": "^4.11.0"
+  }
+}
