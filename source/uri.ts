@@ -2,6 +2,7 @@ import { parse } from "url";
 
 export interface SourceDetails {
     path: string;
+    removeSourceCopy: boolean;
     type: SourceType;
 }
 
@@ -16,7 +17,14 @@ export interface WebDAVSourceDetails extends SourceDetails {
     username?: string;
 }
 
-export function expandSourceURI(uri: string): FileSystemSourceDetails | WebDAVSourceDetails {
+export function expandSourceURI(
+    uri: string,
+    {
+        removeSourceCopy = false
+    }: {
+        removeSourceCopy?: boolean
+    } = {}
+): FileSystemSourceDetails | WebDAVSourceDetails {
     const {
         auth,
         host,
@@ -31,6 +39,7 @@ export function expandSourceURI(uri: string): FileSystemSourceDetails | WebDAVSo
             password,
             path,
             port: parseInt(port, 10),
+            removeSourceCopy,
             type: "webdav",
             username
         };
@@ -38,6 +47,7 @@ export function expandSourceURI(uri: string): FileSystemSourceDetails | WebDAVSo
     }
     return {
         path,
+        removeSourceCopy,
         type: "fs"
     };
 }
