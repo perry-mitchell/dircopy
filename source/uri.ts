@@ -2,8 +2,10 @@ import { parse } from "url";
 
 export interface SourceDetails {
     path: string;
-    type: "fs" | "webdav";
+    type: SourceType;
 }
+
+export type SourceType = "fs" | "webdav";
 
 export interface FileSystemSourceDetails extends SourceDetails {}
 
