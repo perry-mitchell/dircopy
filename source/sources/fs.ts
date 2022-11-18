@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable, Writable } from "node:stream";
 import { Source, SourceFile } from "../source.js";
-import { FileSystemSourceDetails } from "../uri.js";
+import { FileSystemSourceDetails, SourceType } from "../uri.js";
 import { syncDirectory } from "./common/sync.js";
 
 export function createFSSource(details: FileSystemSourceDetails): Source {
@@ -15,10 +15,9 @@ export function createFSSource(details: FileSystemSourceDetails): Source {
         getWriteStream,
         removeSourceCopy: details.removeSourceCopy,
         root: details.path,
-        syncTo: null,
-        type: "fs"
+        syncTo: (target: Source) => syncTo(source, target),
+        type: SourceType.FileSystem
     };
-    source.syncTo = syncTo.bind(source);
     return source;
 }
 
@@ -57,6 +56,6 @@ async function getWriteStream(filename: string): Promise<Writable> {
     return createWriteStream(filename);
 }
 
-async function syncTo(this: Source, remote: Source): Promise<void> {
-    return syncDirectory(this, this.root, remote, remote.root);
+async function syncTo(local: Source, remote: Source): Promise<void> {
+    return syncDirectory(local, local.root, remote, remote.root);
 }

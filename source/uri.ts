@@ -6,7 +6,10 @@ export interface SourceDetails {
     type: SourceType;
 }
 
-export type SourceType = "fs" | "webdav";
+export enum SourceType {
+    FileSystem = "fs",
+    WebDAV = "webdav"
+}
 
 export interface FileSystemSourceDetails extends SourceDetails {}
 
@@ -14,6 +17,7 @@ export interface WebDAVSourceDetails extends SourceDetails {
     host: string;
     password?: string;
     port: number;
+    urlPath: string,
     username?: string;
 }
 
@@ -28,26 +32,29 @@ export function expandSourceURI(
     const {
         auth,
         host,
-        path,
+        path: urlPath = "/",
         port,
-        protocol
-    } = parse(uri);
+        protocol,
+        query = {}
+    } = parse(uri, true);
+    const filePath = query?.path ? Array.isArray(query.path) ? query.path[0] : query.path : null;
     if (protocol.toLowerCase() === "webdav:") {
         const [username = null, password = null] = (auth ?? "").split(":", 2);
         const output: WebDAVSourceDetails = {
             host,
             password,
-            path,
+            path: filePath || "/",
+            urlPath,
             port: parseInt(port, 10),
             removeSourceCopy,
-            type: "webdav",
+            type: SourceType.WebDAV,
             username
         };
         return output;
     }
     return {
-        path,
+        path: filePath || urlPath || "/",
         removeSourceCopy,
-        type: "fs"
+        type: SourceType.FileSystem
     };
 }

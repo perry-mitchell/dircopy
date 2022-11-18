@@ -1,10 +1,12 @@
 import { Readable, Writable } from "node:stream";
-import { SourceDetails, SourceType } from "./uri.js";
+import { createFSSource } from "./sources/fs.js";
+import { createWebDAVSource } from "./sources/webdav.js";
+import { FileSystemSourceDetails, SourceDetails, SourceType, WebDAVSourceDetails } from "./uri.js";
 
 export interface SourceFile {
     filename: string,
     name: string;
-    type: "file" | "directory"
+    type: SourceType;
 }
 
 export interface Source {
@@ -21,9 +23,9 @@ export interface Source {
 
 export function resolveSourceForDetails(details: SourceDetails): Source {
     if (details.type === "webdav") {
-
+        return createWebDAVSource(details as WebDAVSourceDetails);
     } else if (details.type === "fs") {
-
+        return createFSSource(details as FileSystemSourceDetails);
     }
     throw new Error(`Unrecognised type: ${details.type}`);
 }
